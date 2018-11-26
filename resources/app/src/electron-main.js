@@ -1,6 +1,6 @@
 const argv = require('minimist')(process.argv);
 const electron = require('electron');
-const {session} = require('electron');
+const {session, globalShortcut} = require('electron');
 const webContentsHandler = require('./webcontents-handler');
 const PDFWindow = require('electron-pdf-browser-window');
 const electronLocalshortcut = require('electron-localshortcut');
@@ -8,6 +8,7 @@ const electronLocalshortcut = require('electron-localshortcut');
 let mainWindow = null;
 let currentSession = null;
 let targetUrl = null;
+let isFullScreen = false;
 
 const windowStateKeeper = require('electron-window-state');
 
@@ -54,12 +55,22 @@ electron.ipcMain.on('app_onAction', function(ev, payload) {
 
 
 electron.app.on('ready', () => {
-
-    if (argv.devtools) {
+    //if (argv.devtools) {
         try {
             const { default: installExtension } = require('electron-devtools-installer');
-        } catch(e) {console.log(e);}
-    }
+        } catch(e) {
+          console.log(e);
+        }
+    //}
+
+    globalShortcut.register('CommandOrControl+Shift+I', () => {
+        mainWindow.webContents.openDevTools();
+    })
+
+    globalShortcut.register('F11', () => {
+      isFullScreen = !isFullScreen;
+      mainWindow.setFullScreen(isFullScreen);
+    })
 
     sesName=`${process.argv[1]}`
     targetUrl=`${process.argv[1]}`
@@ -121,6 +132,7 @@ electron.app.on('ready', () => {
         mainWindow.show();
         mainWindow.focus();
     });
+    // mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = global.mainWindow = null;
