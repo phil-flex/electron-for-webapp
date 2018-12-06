@@ -84,6 +84,16 @@ electron.app.on('ready', () => {
           mainWindow.webContents.setZoomFactor(zoomFactor)
     })
 
+    electronLocalshortcut.register('Control+1', () => {
+          zoomFactor = 1;
+          mainWindow.webContents.setZoomFactor(zoomFactor)
+    })
+
+    electronLocalshortcut.register('Control+2', () => {
+          zoomFactor = 2;
+          mainWindow.webContents.setZoomFactor(zoomFactor)
+    })
+
     sesName=`${process.argv[1]}`
     targetUrl=`${process.argv[1]}`
     if (targetUrl.indexOf("://") === -1) {
