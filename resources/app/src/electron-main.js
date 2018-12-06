@@ -5,10 +5,12 @@ const webContentsHandler = require('./webcontents-handler');
 const PDFWindow = require('electron-pdf-browser-window');
 const electronLocalshortcut = require('electron-localshortcut');
 
+
 let mainWindow = null;
 let currentSession = null;
 let targetUrl = null;
 let isFullScreen = false;
+let zoomFactor = 1;
 
 const windowStateKeeper = require('electron-window-state');
 
@@ -72,6 +74,16 @@ electron.app.on('ready', () => {
       mainWindow.setFullScreen(isFullScreen);
     })
 
+    electronLocalshortcut.register('Control+Up', () => {
+          zoomFactor += 0.1;
+          mainWindow.webContents.setZoomFactor(zoomFactor)
+    })
+
+    electronLocalshortcut.register('Control+Down', () => {
+          zoomFactor -= 0.1;
+          mainWindow.webContents.setZoomFactor(zoomFactor)
+    })
+
     sesName=`${process.argv[1]}`
     targetUrl=`${process.argv[1]}`
     if (targetUrl.indexOf("://") === -1) {
@@ -113,10 +125,11 @@ electron.app.on('ready', () => {
         height: mainWindowState.height,
         webPreferences: {
           nodeIntegration: false,
-          webSecurity: false,
+          webSecurity: false
         },
         show: true,
     });
+    mainWindow.webContents.setZoomFactor(zoomFactor)
     mainWindow.loadURL(targetUrl)
 
 //    console.log(electron.app.getLocale())
