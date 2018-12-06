@@ -63,11 +63,11 @@ electron.app.on('ready', () => {
         }
     //}
 
-    globalShortcut.register('CommandOrControl+Shift+I', () => {
+    electronLocalshortcut.register('CommandOrControl+Shift+I', () => {
         mainWindow.webContents.openDevTools();
     })
 
-    globalShortcut.register('F11', () => {
+    electronLocalshortcut.register('F11', () => {
       isFullScreen = !isFullScreen;
       mainWindow.setFullScreen(isFullScreen);
     })
